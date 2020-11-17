@@ -1,16 +1,15 @@
+import numpy as np
 import pandas as pd
 from tensorflow.keras.models import load_model
 
-test_file = "data/test.csv"
-raw_data_test = pd.read_csv(test_file)
-
-text_x = raw_data_test.values.astype('float32')
+rawData = pd.read_csv("data/test.csv")
+text_x = rawData.values.astype('float32')
 
 text_x = text_x.reshape(text_x.shape[0], 28, 28,1)
 text_x.shape
 
 model = load_model('output/digit')
-predictions = model.predict_classes(text_x, verbose=0)
+predictions = np.argmax(model.predict(text_x), axis=-1)
 
 submissions=pd.DataFrame({"ImageId": list(range(1,len(predictions)+1)),
                          "Label": predictions})
